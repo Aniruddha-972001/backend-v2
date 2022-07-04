@@ -266,7 +266,7 @@ export class NotificationService {
     //cronJob logic
 
     let osid = logResponse.result.Notificationschedule.osid;
-    //console.log(osid);
+    console.log(osid);
     var yy = date.slice(0, 4);
     let year = parseInt(yy);
 
@@ -290,18 +290,19 @@ export class NotificationService {
     let utcMon = parseInt(utc.slice(5, 7))-1;
   
     
+    console.log(`0 ${mins} ${hrs} ${d} ${mon} *`);
     //console.log(typeof(utc));
 
     //console.log(ut,utcMin,utcDay,utcMon);
     //console.log(`0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`);
-
     const job = new CronJob(
         //`0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`,
-       `0 ${mins} ${hrs} ${d} ${mon} *`,
+        //`0 18 12 4 6 *`,
+        `0 ${mins} ${hrs} ${d} ${mon} *`,
       async () => {
         var axios = require("axios");
         const result = Math.random().toString(27).substring(6, 8);
-        //console.log("job started");
+        console.log("job started");
         var conversationData = {
           data: {
             name: `Shiksha ${channel} Broadcast ${result}`,
@@ -319,7 +320,7 @@ export class NotificationService {
             adapter: contentData.user,
           },
         };
-
+        console.log(conversationData.data);
         const conversation = await axios.post(
           `${this.UCIURL}/conversationLogic/create`,
           conversationData,
@@ -332,9 +333,9 @@ export class NotificationService {
         );
 
         const resData = conversation.data;
-
+        console.log(resData);
         const consversationLogicID = resData.result.data.id;
-
+        console.log(consversationLogicID);
         // Bot Logic
         var botData = {
           data: {
@@ -404,7 +405,7 @@ export class NotificationService {
           },
         };
         const deletedNotification = await axios(deleteCron);
-        //console.log("done");
+        console.log("done");
         job.stop();
       }
     );
