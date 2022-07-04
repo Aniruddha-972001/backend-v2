@@ -233,7 +233,7 @@ export class NotificationService {
     var notificationTrigger = triggers.filter(
       (obj: any) => obj.name === eventTrigger
     );
-
+    //console.log(notificationTrigger);
     //save notification
     let notificationScheduleData = {
       medium: channel,
@@ -249,7 +249,7 @@ export class NotificationService {
       minutes,
       month,
     };
-
+    //console.log(notificationScheduleData);
     var logConfig = {
       method: "post",
       url: `${this.baseURL}Notificationschedule`,
@@ -261,11 +261,12 @@ export class NotificationService {
 
     const logRes = await axios(logConfig);
     const logResponse = logRes.data;
+    //console.log(logResponse);
 
     //cronJob logic
 
     let osid = logResponse.result.Notificationschedule.osid;
-
+    //console.log(osid);
     var yy = date.slice(0, 4);
     let year = parseInt(yy);
 
@@ -278,19 +279,29 @@ export class NotificationService {
 
     let hrs = parseInt(hours);
     let mins = +minutes;
+    
+    //console.log(year,d,mon,mins);
 
     let ist = new Date(year, mon, d, hrs, mins);
     let utc = moment.utc(ist).format("YYYY-MM-DD HH:mm:ss ");
-    let utcMin = utc.slice(14, 16);
-    let utcHrs = utc.slice(11, 13);
-    let utcDay = utc.slice(8, 11);
-    let utcMon = utc.slice(5, 7);
+    let utcMin = parseInt(utc.slice(14, 16));
+    let utcHrs = parseInt(utc.slice(11, 13));
+    let utcDay = parseInt(utc.slice(8, 11));
+    let utcMon = parseInt(utc.slice(5, 7))-1;
+  
+    
+    //console.log(typeof(utc));
+
+    //console.log(ut,utcMin,utcDay,utcMon);
+    //console.log(`0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`);
 
     const job = new CronJob(
-      `0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`,
+        //`0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`,
+       `0 ${mins} ${hrs} ${d} ${mon} *`,
       async () => {
         var axios = require("axios");
         const result = Math.random().toString(27).substring(6, 8);
+        //console.log("job started");
         var conversationData = {
           data: {
             name: `Shiksha ${channel} Broadcast ${result}`,
@@ -393,7 +404,7 @@ export class NotificationService {
           },
         };
         const deletedNotification = await axios(deleteCron);
-
+        //console.log("done");
         job.stop();
       }
     );
@@ -401,7 +412,7 @@ export class NotificationService {
     this.schedulerRegistry.addCronJob(jobName, job);
     job.start();
 
-    return `SMS set for EOD at `;
+    return `SMS set for EOD at ${hours}:${minutes} `;
   }
 
   public async getNotification(notificationId: string, request: any) {
