@@ -296,9 +296,14 @@ export class NotificationService {
     //console.log(ut,utcMin,utcDay,utcMon);
     //console.log(`0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`);
     const job = new CronJob(
+<<<<<<< HEAD
         //`0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`,
         //`0 18 12 4 6 *`,
         `0 ${mins} ${hrs} ${d} ${mon} *`,
+=======
+      // `0 ${utcMin} ${utcHrs} ${utcDay} ${utcMon} *`,
+      `0 ${mins} ${hrs} ${d} ${mon} *`,
+>>>>>>> upstream/main
       async () => {
         var axios = require("axios");
         const result = Math.random().toString(27).substring(6, 8);
